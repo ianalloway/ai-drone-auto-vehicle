@@ -2,6 +2,45 @@
 
 AI-powered integration framework for drones and autonomous vehicles, combining computer vision, path planning, and real-time decision making.
 
+```mermaid
+flowchart TB
+    subgraph Vision["Computer Vision"]
+        YOLOv8[YOLOv8 Detection]
+        SLAM[Visual SLAM]
+        Track[Object Tracking]
+    end
+    
+    subgraph Planning["Path Planning"]
+        AStar[A* Algorithm]
+        RRT[RRT* Planner]
+        Avoid[Obstacle Avoidance]
+    end
+    
+    subgraph Decision["Decision Engine"]
+        BT[Behavior Trees]
+        RL[RL Agent]
+        Safety[Safety Systems]
+    end
+    
+    subgraph Sensors["Sensor Fusion"]
+        Cam[Camera]
+        LiDAR[LiDAR]
+        IMU[IMU]
+        GPS[GPS]
+    end
+    
+    subgraph Comm["Communication"]
+        MAV[MAVLink]
+        ROS[ROS 2]
+    end
+    
+    Sensors --> Vision
+    Vision --> Decision
+    Planning --> Decision
+    Decision --> Comm
+    Comm --> Drone[Drone/Vehicle]
+```
+
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)
