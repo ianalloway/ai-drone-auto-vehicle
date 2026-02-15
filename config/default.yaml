@@ -1,0 +1,41 @@
+# Drone AI Configuration
+
+drone:
+  connection: "udp:127.0.0.1:14550"
+  max_altitude: 120  # meters
+  max_speed: 15      # m/s
+  geofence:
+    enabled: true
+    radius: 500      # meters
+
+vision:
+  model: "yolov8n"
+  confidence: 0.5
+  device: "cpu"  # or "cuda"
+  detection_classes:
+    - person
+    - car
+    - truck
+    - bird
+
+planning:
+  algorithm: "rrt_star"  # or "astar"
+  safety_margin: 2.0     # meters
+  replan_frequency: 5    # Hz
+  path_smoothing: true
+
+safety:
+  battery_warning: 30    # percent
+  battery_critical: 15
+  battery_emergency: 10
+  signal_warning: 40
+  signal_critical: 20
+  max_tilt: 45           # degrees
+  min_satellites: 6
+
+sensors:
+  fusion_rate: 100       # Hz
+  gps_weight: 1.0
+  baro_weight: 0.8
+  imu_timeout: 0.1       # seconds
+  gps_timeout: 2.0
