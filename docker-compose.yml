@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  drone-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "14550:14550/udp"
+    restart: unless-stopped
+    environment:
+      - MAVLINK_CONNECTION=udp:0.0.0.0:14550
+    volumes:
+      - ./logs:/app/logs
+      - ./missions:/app/missions
+
+  # Development service
+  dev:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+      - pip_cache:/root/.cache/pip
+    ports:
+      - "14550:14550/udp"
+    command: >
+      sh -c "pip install dronekit pymavlink numpy &&
+             python -m src.main"
+    profiles:
+      - dev
+
+  # SITL simulator for testing
+  sitl:
+    image: radarku/ardupilot-sitl
+    ports:
+      - "5760:5760"
+      - "5762:5762"
+    environment:
+      - VEHICLE=copter
+      - MODEL=quad
+    profiles:
+      - sim
+
+volumes:
+  pip_cache:
