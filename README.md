@@ -2,6 +2,10 @@
 
 AI-powered integration framework for drones and autonomous vehicles, combining computer vision, path planning, and real-time decision making.
 
+<p align="center">
+  <img src="docs/demo.svg" alt="Drone AI Architecture" width="800"/>
+</p>
+
 ```mermaid
 flowchart TB
     subgraph Vision["Computer Vision"]
