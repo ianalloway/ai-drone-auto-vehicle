@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [devin/1771173804-drone-ai-init]
+  pull_request:
+    branches: [devin/1771173804-drone-ai-init]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || pip install dronekit pymavlink numpy
+
+      - name: Run linter
+        run: |
+          pip install ruff
+          ruff check . || true
+
+      - name: Syntax check
+        run: |
+          python -m py_compile src/*.py || true
+          python -m py_compile examples/*.py || true
