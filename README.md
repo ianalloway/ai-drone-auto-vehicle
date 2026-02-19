@@ -263,10 +263,10 @@ MIT License - see LICENSE file for details.
 If you find this project helpful, consider supporting with ETH:
 
 ```
-0xAc7C093B312700614C80Ba3e0509f8dEde03515b
+0x6f278ce76ba5ed31fd9be646d074863e126836e9
 ```
 
-[![Ethereum](https://img.shields.io/badge/Donate_ETH-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white)](https://etherscan.io/address/0xAc7C093B312700614C80Ba3e0509f8dEde03515b)
+[![Ethereum](https://img.shields.io/badge/Donate_ETH-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white)](https://etherscan.io/address/0x6f278ce76ba5ed31fd9be646d074863e126836e9)
 
 ## Contact
 
