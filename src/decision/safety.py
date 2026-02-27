@@ -22,13 +22,18 @@ class SafetyLevel(Enum):
 
 
 class SafetyAction(Enum):
-    """Actions to take in response to safety events."""
-    CONTINUE = "continue"
-    SLOW_DOWN = "slow_down"
-    HOVER = "hover"
-    RETURN_HOME = "return_home"
-    EMERGENCY_LAND = "emergency_land"
-    KILL_MOTORS = "kill_motors"
+    """Actions to take in response to safety events.
+
+    Integer values represent severity: higher value = more severe action.
+    This ordering is used by SafetyMonitor.check_state to ensure the
+    most severe required action always wins when multiple checks fire.
+    """
+    CONTINUE = 0
+    SLOW_DOWN = 1
+    HOVER = 2
+    RETURN_HOME = 3
+    EMERGENCY_LAND = 4
+    KILL_MOTORS = 5
 
 
 @dataclass
@@ -169,7 +174,7 @@ class SafetyMonitor:
         
         # Update current safety level
         if self.alerts:
-            self.current_level = max(a.level for a in self.alerts)
+            self.current_level = max(self.alerts, key=lambda a: a.level.value).level
         else:
             self.current_level = SafetyLevel.NORMAL
         
