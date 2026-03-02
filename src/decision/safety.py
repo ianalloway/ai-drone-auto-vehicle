@@ -5,14 +5,14 @@ Provides safety monitoring and emergency response systems
 for autonomous drone operations.
 """
 
-from enum import Enum
+from enum import Enum, IntEnum
 from dataclasses import dataclass
 from typing import List, Optional, Callable
 from loguru import logger
 import time
 
 
-class SafetyLevel(Enum):
+class SafetyLevel(IntEnum):
     """Safety alert levels."""
     NORMAL = 0
     CAUTION = 1
@@ -21,14 +21,14 @@ class SafetyLevel(Enum):
     EMERGENCY = 4
 
 
-class SafetyAction(Enum):
-    """Actions to take in response to safety events."""
-    CONTINUE = "continue"
-    SLOW_DOWN = "slow_down"
-    HOVER = "hover"
-    RETURN_HOME = "return_home"
-    EMERGENCY_LAND = "emergency_land"
-    KILL_MOTORS = "kill_motors"
+class SafetyAction(IntEnum):
+    """Actions to take in response to safety events, ordered by severity."""
+    CONTINUE = 0
+    SLOW_DOWN = 1
+    HOVER = 2
+    RETURN_HOME = 3
+    EMERGENCY_LAND = 4
+    KILL_MOTORS = 5
 
 
 @dataclass
