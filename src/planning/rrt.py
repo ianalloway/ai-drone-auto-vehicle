@@ -19,6 +19,12 @@ class RRTNode:
     cost: float = 0.0
     children: List['RRTNode'] = field(default_factory=list)
 
+    def __eq__(self, other: object) -> bool:
+        return self is other
+
+    def __hash__(self) -> int:
+        return id(self)
+
 
 class RRTStarPlanner:
     """
