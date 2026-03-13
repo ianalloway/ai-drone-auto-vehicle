@@ -60,13 +60,14 @@ class _SimulatedAccel:
 
 def _fill_six_positions(calibrator: AccelerometerCalibrator, n: int = 50):
     """Feed six position samples into the calibrator."""
+    rng = np.random.default_rng(0)
     for axis in range(3):
         for polarity in [1, -1]:
             calibrator.start_position()
             reading = _SimulatedAccel.reading(axis, polarity)
             for _ in range(n):
                 # Add small noise
-                calibrator.add_sample(reading + np.random.default_rng(0).normal(0, 1e-4, 3))
+                calibrator.add_sample(reading + rng.normal(0, 1e-4, 3))
             calibrator.finish_position()
 
 

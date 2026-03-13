@@ -1,7 +1,7 @@
 """
 Visual SLAM Module for Drone AI
 
-Implements a lightweight monocular Visual Simultaneous Localisation and
+Implements a lightweight monocular Visual Simultaneous Localization and
 Mapping (SLAM) pipeline for GPS-denied environments.  The pipeline combines:
 
   - Feature extraction and matching (ORB descriptors via OpenCV)
