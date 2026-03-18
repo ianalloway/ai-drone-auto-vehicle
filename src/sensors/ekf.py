@@ -118,25 +118,23 @@ class ExtendedKalmanFilter:
         # Innovation
         y = measurement - self.H @ self.x
         
-        # Normalize angles
+        # Normalize angles to [-pi, pi]
         for i in range(3, len(y)):
-            while y[i] > np.pi:
-                y[i] -= 2 * np.pi
-            while y[i] < -np.pi:
-                y[i] += 2 * np.pi
-        
+            y[i] = (y[i] + np.pi) % (2 * np.pi) - np.pi
+
         # Innovation covariance
         S = self.H @ self.P @ self.H.T + self.R
-        
-        # Kalman gain
-        K = self.P @ self.H.T @ np.linalg.inv(S)
-        
+
+        # Kalman gain (use solve to avoid explicit matrix inversion)
+        K = np.linalg.solve(S.T, (self.P @ self.H.T).T).T
+
         # State update
         self.x = self.x + K @ y
-        
-        # Covariance update
+
+        # Covariance update (Joseph form for numerical stability)
         I = np.eye(self.state_dim)
-        self.P = (I - K @ self.H) @ self.P
+        IKH = I - K @ self.H
+        self.P = IKH @ self.P @ IKH.T + K @ self.R @ K.T
     
     def get_state(self) -> np.ndarray:
         """Get current state estimate."""

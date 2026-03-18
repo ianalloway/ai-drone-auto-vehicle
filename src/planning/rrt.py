@@ -7,8 +7,9 @@ with dynamic obstacles.
 
 import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Tuple, Optional
+from typing import List, Set, Tuple, Optional
 from loguru import logger
+from scipy.spatial import KDTree
 
 
 @dataclass
@@ -17,7 +18,7 @@ class RRTNode:
     position: np.ndarray
     parent: Optional['RRTNode'] = None
     cost: float = 0.0
-    children: List['RRTNode'] = field(default_factory=list)
+    children: Set['RRTNode'] = field(default_factory=set)
 
 
 class RRTStarPlanner:
@@ -55,7 +56,8 @@ class RRTStarPlanner:
         
         self.obstacles: List[Tuple[np.ndarray, float]] = []  # (center, radius)
         self.nodes: List[RRTNode] = []
-        
+        self._kdtree: Optional[KDTree] = None
+
         logger.info(f"RRTStarPlanner initialized with {self.dim}D space")
     
     def set_obstacles(self, obstacles: List[Tuple[Tuple[float, ...], float]]):
@@ -90,7 +92,8 @@ class RRTStarPlanner:
         
         # Initialize tree with start node
         self.nodes = [RRTNode(position=start_arr)]
-        
+        self._kdtree = KDTree([start_arr])
+
         best_goal_node = None
         best_cost = float('inf')
         
@@ -128,20 +131,22 @@ class RRTStarPlanner:
                     parent=best_parent,
                     cost=min_cost
                 )
-                best_parent.children.append(new_node)
+                best_parent.children.add(new_node)
                 self.nodes.append(new_node)
-                
+                # Rebuild KDTree with the new node included
+                self._kdtree = KDTree([n.position for n in self.nodes])
+
                 # Rewire nearby nodes
                 for near in near_nodes:
                     new_cost = new_node.cost + self._distance(new_node.position, near.position)
                     if new_cost < near.cost and self._collision_free(new_node.position, near.position):
-                        # Remove from old parent
+                        # Remove from old parent (O(1) with set)
                         if near.parent:
-                            near.parent.children.remove(near)
+                            near.parent.children.discard(near)
                         # Set new parent
                         near.parent = new_node
                         near.cost = new_cost
-                        new_node.children.append(near)
+                        new_node.children.add(near)
                         self._propagate_cost(near)
                 
                 # Check if goal reached
@@ -175,24 +180,14 @@ class RRTStarPlanner:
         return sample
     
     def _nearest_node(self, point: np.ndarray) -> RRTNode:
-        """Find nearest node in tree to point."""
-        min_dist = float('inf')
-        nearest = self.nodes[0]
-        
-        for node in self.nodes:
-            dist = self._distance(node.position, point)
-            if dist < min_dist:
-                min_dist = dist
-                nearest = node
-        
-        return nearest
-    
+        """Find nearest node in tree to point using KDTree."""
+        _, idx = self._kdtree.query(point)
+        return self.nodes[idx]
+
     def _near_nodes(self, point: np.ndarray) -> List[RRTNode]:
-        """Find all nodes within search radius."""
-        return [
-            node for node in self.nodes
-            if self._distance(node.position, point) < self.search_radius
-        ]
+        """Find all nodes within search radius using KDTree."""
+        idxs = self._kdtree.query_ball_point(point, self.search_radius)
+        return [self.nodes[i] for i in idxs]
     
     def _steer(self, from_pos: np.ndarray, to_pos: np.ndarray) -> np.ndarray:
         """Steer from one position towards another with step size limit."""
@@ -210,8 +205,9 @@ class RRTStarPlanner:
     
     def _collision_free(self, p1: np.ndarray, p2: np.ndarray) -> bool:
         """Check if path between two points is collision-free."""
-        # Check multiple points along the path
-        num_checks = max(int(self._distance(p1, p2) / 1.0), 2)
+        # Check one sample per (step_size / 5) units of distance
+        check_resolution = max(self.step_size / 5.0, 0.5)
+        num_checks = max(int(self._distance(p1, p2) / check_resolution), 2)
         
         for i in range(num_checks + 1):
             t = i / num_checks

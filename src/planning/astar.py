@@ -126,8 +126,9 @@ class AStarPlanner:
         # Initialize
         start_node = Node(position=start, g_cost=0)
         start_node.h_cost = self._heuristic(start, goal)
-        
+
         open_set: List[Node] = [start_node]
+        open_set_positions: Set[Tuple[int, int]] = {start}
         closed_set: Set[Tuple[int, int]] = set()
         node_map = {start: start_node}
         
@@ -136,10 +137,11 @@ class AStarPlanner:
         
         while open_set and iterations < max_iterations:
             iterations += 1
-            
+
             # Get node with lowest f_cost
             current = heapq.heappop(open_set)
-            
+            open_set_positions.discard(current.position)
+
             if current.position == goal:
                 path = self._reconstruct_path(current)
                 logger.info(f"Path found with {len(path)} waypoints in {iterations} iterations")
@@ -176,9 +178,10 @@ class AStarPlanner:
                     neighbor.parent = current
                     neighbor.g_cost = tentative_g
                     neighbor.h_cost = self._heuristic(neighbor_pos, goal)
-                    
-                    if neighbor not in open_set:
+
+                    if neighbor_pos not in open_set_positions:
                         heapq.heappush(open_set, neighbor)
+                        open_set_positions.add(neighbor_pos)
         
         logger.warning(f"No path found after {iterations} iterations")
         return None
