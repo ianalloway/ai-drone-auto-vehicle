@@ -1,6 +1,6 @@
 # Path Planning module for autonomous navigation
 from .astar import AStarPlanner
-from .rrt import RRTStarPlanner
 from .avoidance import ObstacleAvoider
+from .rrt import RRTStarPlanner
 
-__all__ = ["AStarPlanner", "RRTStarPlanner", "ObstacleAvoider"]
+__all__ = ["AStarPlanner", "ObstacleAvoider", "RRTStarPlanner"]

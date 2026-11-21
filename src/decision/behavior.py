@@ -4,9 +4,10 @@ Behavior Tree Module for Drone AI
 Implements behavior trees for mission execution and decision making.
 """
 
-from enum import Enum
 from abc import ABC, abstractmethod
-from typing import List, Optional, Callable, Any, Dict
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
+
 from loguru import logger
 
 
@@ -27,7 +28,6 @@ class BehaviorNode(ABC):
     @abstractmethod
     def tick(self, blackboard: Dict[str, Any]) -> NodeStatus:
         """Execute one tick of the node."""
-        pass
     
     def reset(self):
         """Reset node state."""
@@ -130,7 +130,7 @@ class ParallelNode(BehaviorNode):
         self, 
         name: str, 
         children: List[BehaviorNode],
-        success_threshold: int = None,
+        success_threshold: Optional[int] = None,
         failure_threshold: int = 1
     ):
         super().__init__(name)

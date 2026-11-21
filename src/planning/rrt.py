@@ -5,9 +5,10 @@ Implements RRT* algorithm for path planning in complex environments
 with dynamic obstacles.
 """
 
-import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
+
+import numpy as np
 from loguru import logger
 
 

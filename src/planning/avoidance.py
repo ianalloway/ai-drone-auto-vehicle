@@ -5,9 +5,10 @@ Provides real-time obstacle avoidance using velocity obstacles
 and potential fields for reactive navigation.
 """
 
-import numpy as np
 from dataclasses import dataclass
-from typing import List, Tuple, Optional
+from typing import List
+
+import numpy as np
 from loguru import logger
 
 
@@ -100,8 +101,7 @@ class ObstacleAvoider:
             diff = position - obs.position
             dist = np.linalg.norm(diff) - obs.radius
             
-            if dist < closest_dist:
-                closest_dist = dist
+            closest_dist = min(closest_dist, dist)
             
             # Apply repulsion if within safety distance
             if dist < self.safety_distance:
