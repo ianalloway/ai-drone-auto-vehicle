@@ -5,9 +5,10 @@ Provides real-time object detection using YOLOv8 for obstacle identification,
 landing zone detection, and target tracking.
 """
 
-import numpy as np
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import ClassVar, Dict, List, Tuple
+
+import numpy as np
 from loguru import logger
 
 
@@ -31,7 +32,7 @@ class ObjectDetector:
     """
     
     # Default classes relevant to drone navigation
-    OBSTACLE_CLASSES = {
+    OBSTACLE_CLASSES: ClassVar[Dict[int, str]] = {
         0: "person",
         1: "bicycle", 
         2: "car",
@@ -84,8 +85,8 @@ class ObjectDetector:
             logger.warning("ultralytics not installed, using mock detector")
             self._is_initialized = True
             return True
-        except Exception as e:
-            logger.error(f"Failed to load YOLO model: {e}")
+        except Exception:
+            logger.exception("Failed to load YOLO model")
             return False
     
     def detect(self, frame: np.ndarray) -> List[Detection]:
@@ -132,8 +133,8 @@ class ObjectDetector:
             
             logger.debug(f"Detected {len(detections)} objects")
             
-        except Exception as e:
-            logger.error(f"Detection failed: {e}")
+        except Exception:
+            logger.exception("Detection failed")
         
         return detections
     

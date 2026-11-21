@@ -16,7 +16,7 @@ Requirements:
 """
 
 import asyncio
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 # Simulated DroneAI imports (replace with actual imports when framework is complete)
 # from drone_ai import Drone, Mission, Waypoint
@@ -65,8 +65,8 @@ class WaypointMission:
         self.default_altitude = 10.0  # meters
         self.default_speed = 5.0  # m/s
     
-    def add_waypoint(self, lat: float, lon: float, alt: float = None, 
-                     speed: float = None, hold_time: float = 0.0):
+    def add_waypoint(self, lat: float, lon: float, alt: Optional[float] = None,
+                     speed: Optional[float] = None, hold_time: float = 0.0):
         """Add a waypoint to the mission."""
         coord = GPSCoordinate(
             lat, lon, 

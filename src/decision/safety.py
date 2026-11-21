@@ -5,11 +5,12 @@ Provides safety monitoring and emergency response systems
 for autonomous drone operations.
 """
 
-from enum import Enum
-from dataclasses import dataclass
-from typing import List, Optional, Callable
-from loguru import logger
 import time
+from dataclasses import dataclass
+from enum import Enum
+from typing import Callable, List
+
+from loguru import logger
 
 
 class SafetyLevel(Enum):
@@ -183,8 +184,8 @@ class SafetyMonitor:
             for callback in self.callbacks:
                 try:
                     callback(alert)
-                except Exception as e:
-                    logger.error(f"Callback error: {e}")
+                except Exception:
+                    logger.exception("Callback error")
         
         return action
     

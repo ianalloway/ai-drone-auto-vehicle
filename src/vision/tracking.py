@@ -5,9 +5,10 @@ Provides multi-object tracking capabilities for following targets
 and maintaining awareness of moving obstacles.
 """
 
-import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Tuple
+from typing import Dict, List, Tuple
+
+import numpy as np
 from loguru import logger
 
 
@@ -78,7 +79,7 @@ class ObjectTracker:
             return self._get_confirmed_tracks()
         
         # Match detections to existing tracks
-        matched, unmatched_dets, unmatched_tracks = self._match_detections(detections)
+        matched, unmatched_dets, _unmatched_tracks = self._match_detections(detections)
         
         # Update matched tracks
         for track_id, det_idx in matched:
@@ -157,7 +158,7 @@ class ObjectTracker:
         track = self.tracks[track_id]
         old_center = track.center
         
-        x1, y1, x2, y2, class_name = detection
+        x1, y1, x2, y2, _class_name = detection
         new_center = ((x1 + x2) // 2, (y1 + y2) // 2)
         
         # Estimate velocity

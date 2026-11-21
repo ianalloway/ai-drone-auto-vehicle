@@ -1,5 +1,5 @@
 # Decision Making module for autonomous behavior
-from .behavior import BehaviorTree, BehaviorNode
+from .behavior import BehaviorNode, BehaviorTree
 from .safety import SafetyMonitor
 
-__all__ = ["BehaviorTree", "BehaviorNode", "SafetyMonitor"]
+__all__ = ["BehaviorNode", "BehaviorTree", "SafetyMonitor"]

@@ -22,9 +22,9 @@ Requirements:
 
 import asyncio
 import math
-from typing import List, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import List, Tuple
 
 
 class PatternType(Enum):
@@ -189,7 +189,7 @@ class SurveyPatternGenerator:
         for expansion in range(1, max_expansions + 1):
             for dir_idx, (dlat, dlon) in enumerate(directions):
                 # Number of steps increases with each expansion
-                steps = expansion if dir_idx < 2 else expansion
+                steps = expansion
                 if dir_idx >= 2:
                     steps = expansion + 1
                 

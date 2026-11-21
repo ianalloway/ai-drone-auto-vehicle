@@ -5,9 +5,10 @@ Implements A* pathfinding for global path planning in known environments.
 """
 
 import heapq
-import numpy as np
 from dataclasses import dataclass
-from typing import List, Tuple, Optional, Set
+from typing import ClassVar, List, Optional, Set, Tuple
+
+import numpy as np
 from loguru import logger
 
 
@@ -44,7 +45,7 @@ class AStarPlanner:
     """
     
     # 8-directional movement (including diagonals)
-    DIRECTIONS_2D = [
+    DIRECTIONS_2D: ClassVar[List[Tuple[int, int]]] = [
         (0, 1), (1, 0), (0, -1), (-1, 0),  # Cardinal
         (1, 1), (1, -1), (-1, 1), (-1, -1)  # Diagonal
     ]

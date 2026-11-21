@@ -4,11 +4,12 @@ Sensor Fusion Module for Drone AI
 Combines data from multiple sensors for robust state estimation.
 """
 
-import numpy as np
-from dataclasses import dataclass
-from typing import Optional, Dict, List
-from loguru import logger
 import time
+from dataclasses import dataclass
+from typing import Optional
+
+import numpy as np
+from loguru import logger
 
 from .ekf import ExtendedKalmanFilter
 
@@ -194,7 +195,7 @@ class SensorFusion:
         
         # Use magnetometer for yaw if available
         if np.linalg.norm(imu.magnetometer) > 0:
-            mx, my, mz = imu.magnetometer
+            mx, my, _mz = imu.magnetometer
             mag_yaw = np.arctan2(my, mx)
             self.orientation[2] = self.alpha * gyro_yaw + (1 - self.alpha) * mag_yaw
     

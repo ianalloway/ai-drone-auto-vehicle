@@ -4,8 +4,9 @@ Extended Kalman Filter for Drone AI
 Implements EKF for state estimation combining multiple sensor inputs.
 """
 
+from typing import Optional
+
 import numpy as np
-from typing import Optional, Tuple
 from loguru import logger
 
 

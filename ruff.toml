@@ -1,0 +1,8 @@
+target-version = "py38"
+
+[lint.pyupgrade]
+# Keep annotations evaluable on the Python 3.8 hardware images.
+keep-runtime-typing = true
+
+[lint]
+logger-objects = ["loguru.logger"]

@@ -7,8 +7,9 @@ and telemetry with PX4 and ArduPilot autopilots.
 
 import time
 from dataclasses import dataclass
-from typing import Optional, Callable, List, Tuple
 from enum import Enum
+from typing import Callable, List, Optional, Tuple
+
 from loguru import logger
 
 
@@ -122,8 +123,8 @@ class MAVLinkController:
             logger.warning("pymavlink not installed, using mock connection")
             self._connected = True
             return True
-        except Exception as e:
-            logger.error(f"Connection failed: {e}")
+        except Exception:
+            logger.exception("Connection failed")
             return False
     
     def disconnect(self):
@@ -157,8 +158,8 @@ class MAVLinkController:
             logger.info("Vehicle armed")
             return True
             
-        except Exception as e:
-            logger.error(f"Arm failed: {e}")
+        except Exception:
+            logger.exception("Arm failed")
             return False
     
     def disarm(self) -> bool:
@@ -180,8 +181,8 @@ class MAVLinkController:
             logger.info("Vehicle disarmed")
             return True
             
-        except Exception as e:
-            logger.error(f"Disarm failed: {e}")
+        except Exception:
+            logger.exception("Disarm failed")
             return False
     
     def takeoff(self, altitude: float) -> bool:
@@ -213,8 +214,8 @@ class MAVLinkController:
             logger.info(f"Takeoff commanded to {altitude}m")
             return True
             
-        except Exception as e:
-            logger.error(f"Takeoff failed: {e}")
+        except Exception:
+            logger.exception("Takeoff failed")
             return False
     
     def land(self) -> bool:
@@ -238,8 +239,8 @@ class MAVLinkController:
             logger.info("Land commanded")
             return True
             
-        except Exception as e:
-            logger.error(f"Land failed: {e}")
+        except Exception:
+            logger.exception("Land failed")
             return False
     
     def goto(
@@ -280,8 +281,8 @@ class MAVLinkController:
             logger.info(f"Goto commanded: {latitude}, {longitude}, {altitude}m")
             return True
             
-        except Exception as e:
-            logger.error(f"Goto failed: {e}")
+        except Exception:
+            logger.exception("Goto failed")
             return False
     
     def set_velocity(
@@ -319,8 +320,8 @@ class MAVLinkController:
             
             return True
             
-        except Exception as e:
-            logger.error(f"Set velocity failed: {e}")
+        except Exception:
+            logger.exception("Set velocity failed")
             return False
     
     def set_mode(self, mode: FlightMode) -> bool:
@@ -345,8 +346,8 @@ class MAVLinkController:
             logger.info(f"Mode set to {mode.value} (mock)")
             return True
             
-        except Exception as e:
-            logger.error(f"Set mode failed: {e}")
+        except Exception:
+            logger.exception("Set mode failed")
             return False
     
     def return_to_launch(self) -> bool:
@@ -415,8 +416,8 @@ class MAVLinkController:
                 timestamp=time.time()
             )
             
-        except Exception as e:
-            logger.error(f"Get telemetry failed: {e}")
+        except Exception:
+            logger.exception("Get telemetry failed")
             return None
     
     def register_telemetry_callback(self, callback: Callable[[Telemetry], None]):

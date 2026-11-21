@@ -6,18 +6,17 @@ Demonstrates a simple autonomous mission with waypoint navigation
 and obstacle avoidance.
 """
 
-import time
-import numpy as np
-from loguru import logger
-
 # Import Drone AI modules
 import sys
+import time
+
+from loguru import logger
+
 sys.path.insert(0, '..')
 
-from src.communication.mavlink import MAVLinkController, FlightMode
+from src.communication.mavlink import FlightMode, MAVLinkController
+from src.decision.safety import DroneState, SafetyMonitor
 from src.vision.detection import ObjectDetector
-from src.planning.astar import AStarPlanner
-from src.decision.safety import SafetyMonitor, DroneState
 
 
 def main():
@@ -131,8 +130,8 @@ def main():
         time.sleep(5)
         controller.disarm()
     
-    except Exception as e:
-        logger.error(f"Mission failed: {e}")
+    except Exception:
+        logger.exception("Mission failed")
         controller.return_to_launch()
     
     finally:
